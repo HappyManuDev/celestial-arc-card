@@ -21,5 +21,40 @@
   },
   "warning": {
     "entity_not_found": "Entity not found: {entity}"
+  },
+  "editor": {
+    "entity": {
+      "label": "Sun entity",
+      "helper": "Usually sun.sun, provided by the Sun integration."
+    },
+    "title": { "label": "Title (optional)" },
+    "night_mode": {
+      "label": "At night",
+      "helper": "What moves along the arc between sunset and sunrise."
+    },
+    "night_mode_options": {
+      "moon": "Show the moon with its real phase",
+      "none": "Show nothing (arc only)"
+    },
+    "show_times": { "label": "Sunrise / sunset times" },
+    "show_day_length": { "label": "Day / night length" },
+    "show_moon_phase": { "label": "Moon phase" },
+    "background": { "label": "Card background" },
+    "update_interval": {
+      "label": "Refresh interval",
+      "helper": "How often the marker moves, in seconds."
+    },
+    "colors": {
+      "label": "Colors",
+      "helper": "Any CSS color: #f2b544, orange, var(--accent-color)… Leave empty to keep the default."
+    },
+    "day_arc": { "label": "Day arc" },
+    "night_arc": { "label": "Night arc" },
+    "sun": { "label": "Sun" },
+    "moon": { "label": "Moon" },
+    "label": { "label": "Texts" },
+    "interactions": { "label": "Interactions" },
+    "tap_action": { "label": "Tap action" },
+    "hold_action": { "label": "Hold action" }
   }
 }

@@ -13,7 +13,9 @@ import {
   CARD_VERSION,
   DEFAULT_SUN_ENTITY,
   DOCUMENTATION_URL,
+  EDITOR_TAG,
 } from './const';
+import './editor';
 import type { HomeAssistant, LovelaceGridOptions } from './ha-types';
 import { localize } from './localize/localize';
 import { ARC, renderArc, VIEWBOX_HEIGHT, VIEWBOX_WIDTH } from './render/arc';
@@ -44,6 +46,10 @@ export class CelestialArcCard extends LitElement {
 
   public static getStubConfig(): Partial<CelestialArcCardConfig> {
     return { entity: DEFAULT_SUN_ENTITY };
+  }
+
+  public static getConfigElement(): HTMLElement {
+    return document.createElement(EDITOR_TAG);
   }
 
   public setConfig(config: CelestialArcCardConfig): void {

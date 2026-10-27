@@ -4,6 +4,8 @@ import { css } from 'lit';
 // Text defaults to the Home Assistant theme colors, so the card works in light and dark mode.
 export const cardStyles = css`
   ha-card {
+    display: block;
+    border-radius: var(--ha-card-border-radius, 12px);
     background: none;
     box-shadow: none;
     border: none;

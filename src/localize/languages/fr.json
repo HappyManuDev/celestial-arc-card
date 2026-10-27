@@ -21,5 +21,40 @@
   },
   "warning": {
     "entity_not_found": "Entité introuvable : {entity}"
+  },
+  "editor": {
+    "entity": {
+      "label": "Entité soleil",
+      "helper": "En général sun.sun, fournie par l'intégration Soleil."
+    },
+    "title": { "label": "Titre (facultatif)" },
+    "night_mode": {
+      "label": "La nuit",
+      "helper": "Ce qui se déplace sur l'arc entre le coucher et le lever du soleil."
+    },
+    "night_mode_options": {
+      "moon": "Afficher la lune avec sa vraie phase",
+      "none": "Ne rien afficher (arc seul)"
+    },
+    "show_times": { "label": "Heures de lever / coucher" },
+    "show_day_length": { "label": "Durée du jour / de la nuit" },
+    "show_moon_phase": { "label": "Phase de la lune" },
+    "background": { "label": "Fond de carte" },
+    "update_interval": {
+      "label": "Intervalle de rafraîchissement",
+      "helper": "Fréquence de déplacement du marqueur, en secondes."
+    },
+    "colors": {
+      "label": "Couleurs",
+      "helper": "Toute couleur CSS : #f2b544, orange, var(--accent-color)… Laisser vide pour garder la couleur par défaut."
+    },
+    "day_arc": { "label": "Arc de jour" },
+    "night_arc": { "label": "Arc de nuit" },
+    "sun": { "label": "Soleil" },
+    "moon": { "label": "Lune" },
+    "label": { "label": "Textes" },
+    "interactions": { "label": "Interactions" },
+    "tap_action": { "label": "Action au clic" },
+    "hold_action": { "label": "Action à l'appui long" }
   }
 }

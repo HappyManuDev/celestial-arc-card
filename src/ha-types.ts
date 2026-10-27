@@ -25,6 +25,11 @@ export interface HomeAssistant {
   themes?: { darkMode?: boolean };
 }
 
+export interface ActionConfig {
+  action: string;
+  [key: string]: unknown;
+}
+
 export interface LovelaceCardConfig {
   type: string;
   [key: string]: unknown;

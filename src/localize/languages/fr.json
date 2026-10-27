@@ -1,0 +1,25 @@
+{
+  "moon_phase": {
+    "new_moon": "Nouvelle lune",
+    "waxing_crescent": "Premier croissant",
+    "first_quarter": "Premier quartier",
+    "waxing_gibbous": "Gibbeuse croissante",
+    "full_moon": "Pleine lune",
+    "waning_gibbous": "Gibbeuse décroissante",
+    "last_quarter": "Dernier quartier",
+    "waning_crescent": "Dernier croissant"
+  },
+  "info": {
+    "day_length": "Durée du jour {duration}",
+    "night_length": "Durée de la nuit {duration}",
+    "duration": "{hours} h {minutes} min"
+  },
+  "aria": {
+    "day": "Soleil levé à {start}, coucher à {end}, {percent} de la journée écoulée",
+    "night": "Soleil couché à {start}, lever à {end}, {percent} de la nuit écoulée",
+    "unknown": "Arc du soleil et de la lune"
+  },
+  "warning": {
+    "entity_not_found": "Entité introuvable : {entity}"
+  }
+}

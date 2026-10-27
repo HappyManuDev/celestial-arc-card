@@ -1,12 +1,38 @@
 import { css } from 'lit';
 
-// Every color can be overridden with a CSS variable (theme, card-mod...).
+// Every color can be overridden with a CSS variable (theme, card-mod, `colors` option).
+// Text defaults to the Home Assistant theme colors, so the card works in light and dark mode.
 export const cardStyles = css`
   ha-card {
     background: none;
     box-shadow: none;
     border: none;
     padding: 8px 4px;
+    font-family: var(--cac-font-family, inherit);
+    outline: none;
+  }
+
+  ha-card.with-background {
+    background: var(--ha-card-background, var(--card-background-color));
+    box-shadow: var(--ha-card-box-shadow);
+    border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color));
+    padding: 12px 8px;
+  }
+
+  ha-card[role='button'] {
+    cursor: pointer;
+  }
+
+  ha-card:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+
+  .title {
+    padding: 0 8px 8px;
+    color: var(--primary-text-color);
+    font-size: 16px;
+    font-weight: 500;
   }
 
   svg {
@@ -58,10 +84,19 @@ export const cardStyles = css`
   }
 
   .label {
-    fill: var(--cac-label-color, #5c4a33);
-    font-family: var(--cac-font-family, inherit);
+    fill: var(--cac-label-color, var(--primary-text-color, #212121));
     font-size: 12px;
     font-weight: 600;
+  }
+
+  .infos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 16px;
+    padding-top: 8px;
+    color: var(--cac-label-color, var(--secondary-text-color, #727272));
+    font-size: 13px;
   }
 
   .warning {

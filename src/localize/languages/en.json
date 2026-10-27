@@ -1,0 +1,25 @@
+{
+  "moon_phase": {
+    "new_moon": "New moon",
+    "waxing_crescent": "Waxing crescent",
+    "first_quarter": "First quarter",
+    "waxing_gibbous": "Waxing gibbous",
+    "full_moon": "Full moon",
+    "waning_gibbous": "Waning gibbous",
+    "last_quarter": "Last quarter",
+    "waning_crescent": "Waning crescent"
+  },
+  "info": {
+    "day_length": "Day length {duration}",
+    "night_length": "Night length {duration}",
+    "duration": "{hours}h {minutes}m"
+  },
+  "aria": {
+    "day": "Sun rose at {start} and sets at {end}, {percent} of the day elapsed",
+    "night": "Sun set at {start} and rises at {end}, {percent} of the night elapsed",
+    "unknown": "Sun and moon arc"
+  },
+  "warning": {
+    "entity_not_found": "Entity not found: {entity}"
+  }
+}

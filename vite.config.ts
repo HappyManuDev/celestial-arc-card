@@ -8,6 +8,23 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 
 // Above this size (minified), the build fails: keeps the card light for HACS users.
 const MAX_BUNDLE_BYTES = 60_000;
 
+// Bundled dependencies whose licenses (BSD) require the notice in binary redistributions.
+const BUNDLED_LICENSES = ['lit', 'suncalc'];
+
+const licenseBanner = [
+  '/*! Celestial Arc Card v' + pkg.version + ' | MIT License | (c) HappyManuDev',
+  ' * https://github.com/HappyManuDev/celestial-arc-card',
+  ...BUNDLED_LICENSES.flatMap((name) => [
+    ' *',
+    ` * Includes ${name}:`,
+    ...readFileSync(new URL(`./node_modules/${name}/LICENSE`, import.meta.url), 'utf-8')
+      .trim()
+      .split(/\r?\n/)
+      .map((line) => ` * ${line}`.trimEnd()),
+  ]),
+  ' */',
+].join('\n');
+
 export default defineConfig({
   define: {
     __VERSION__: JSON.stringify(pkg.version),
@@ -25,6 +42,7 @@ export default defineConfig({
       output: {
         // HACS installs a single file: never split into chunks.
         codeSplitting: false,
+        banner: licenseBanner,
       },
     },
   },

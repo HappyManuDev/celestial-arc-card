@@ -485,7 +485,7 @@ test/                       # Vitest unit tests
 
 ## Contributing
 
-Contributions are welcome: bug reports, translations, features.
+Contributions are welcome: bug reports, translations, features. See [CONTRIBUTING.md](CONTRIBUTING.md) for the details.
 
 1. Fork the repository and create a branch.
 2. Make your changes, with tests when relevant.

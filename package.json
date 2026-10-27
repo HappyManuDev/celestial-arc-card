@@ -1,0 +1,55 @@
+{
+  "name": "celestial-arc-card",
+  "version": "0.0.0",
+  "description": "A Home Assistant Lovelace card showing the sun and moon travelling along an arc between sunrise and sunset.",
+  "type": "module",
+  "module": "dist/celestial-arc-card.js",
+  "license": "MIT",
+  "author": "HappyManuDev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HappyManuDev/celestial-arc-card.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HappyManuDev/celestial-arc-card/issues"
+  },
+  "homepage": "https://github.com/HappyManuDev/celestial-arc-card#readme",
+  "keywords": [
+    "home-assistant",
+    "hacs",
+    "lovelace",
+    "lovelace-custom-card",
+    "sun",
+    "moon"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --max-warnings 0 --fix",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "lit": "^3.3.3",
+    "suncalc": "^2.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "eslint-plugin-lit": "^2.3.1",
+    "eslint-plugin-wc": "^3.1.0",
+    "jsdom": "^30.1.3",
+    "prettier": "^3.9.10",
+    "terser": "^5.51.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.1",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

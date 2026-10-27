@@ -3,6 +3,19 @@
 All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.2.0](https://github.com/HappyManuDev/celestial-arc-card/compare/v0.1.0...v0.2.0) (2026-10-27)
+
+
+### Features
+
+* add a visual editor ([9372c9b](https://github.com/HappyManuDev/celestial-arc-card/commit/9372c9bdd22fbaec55e9e6f89b36fbb3df184b58))
+
+
+### Documentation
+
+* add contributing guide ([e5a0bb3](https://github.com/HappyManuDev/celestial-arc-card/commit/e5a0bb3e7632e1866aebd583073e97c129509226))
+* add screenshots and document the visual editor ([49c6be1](https://github.com/HappyManuDev/celestial-arc-card/commit/49c6be1af46904007fdd79544ec5a8de03ef8a44))
+
 ## [0.1.0] - 2026-10-27
 
 First public release.

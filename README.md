@@ -6,8 +6,13 @@
 
 A [Home Assistant](https://www.home-assistant.io/) Lovelace card that shows the **sun travelling along an arc from sunrise to sunset**, and the **moon, with its real phase, from sunset to sunrise**.
 
+|                                                                                Day, light theme                                                                                |                                                                                   Night, dark theme                                                                                    |                                                                         Transparent, custom palette                                                                         |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| ![Sun on the arc in the afternoon, light theme, with title and day length](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-day.png) | ![Waxing crescent moon on the arc, dark theme, with night length and moon phase](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-night.png) | ![Morning sun on a beige dashboard with Montserrat font, in French](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-vintage.png) |
+|                                                      `background: true`<br>`title: Sun & Moon`<br>`show_day_length: true`                                                      |                                                        `background: true`<br>`show_day_length: true`<br>`show_moon_phase: true`                                                        |                                            [Vintage example](#vintage--warm-palette)<br>`show_moon_phase: true`<br>French locale                                            |
+
 > [!NOTE]
-> **Early version (0.x).** The card works and is tested, but options may still change before 1.0. A visual editor is coming: for now, the card is configured in YAML. Feedback is welcome in the [issues](https://github.com/HappyManuDev/celestial-arc-card/issues).
+> **Early version (0.x).** The card works and is tested, but options may still change before 1.0. Feedback is welcome in the [issues](https://github.com/HappyManuDev/celestial-arc-card/issues).
 
 ---
 
@@ -55,6 +60,7 @@ A [Home Assistant](https://www.home-assistant.io/) Lovelace card that shows the 
 - 👆 **Actions**: tap and hold actions (`more-info`, `navigate`, `perform-action`…), like the built-in cards.
 - 🌍 **Localized**: English and French. Other languages are welcome, see [Localization](#localization).
 - ♿ **Accessible**: screen readers get a full description, and the card can be used with the keyboard.
+- 🖱️ **Visual editor**: every option can be set without writing YAML.
 - 📐 **Works in every view**: masonry, sections (grid) and panel views.
 
 ---
@@ -105,7 +111,15 @@ To check that the card is loaded, open your browser's developer console: a `CELE
 
 ## Configuration
 
-> A visual editor is planned (see [Roadmap](#roadmap)). For now, configure the card in YAML: add a card, choose **Manual**, and paste the configuration.
+### Visual editor
+
+Edit a dashboard, click **Add card** and search for **Celestial Arc Card**. Every option can be set from the form:
+
+- sun entity, title, what to show at night, information to display, card background, refresh interval;
+- **Colors** section: any CSS color, leave a field empty to keep the default;
+- **Interactions** section: tap and hold actions.
+
+The editor only saves the options you changed, so the YAML stays short. It is translated into English and French. Everything below can also be written in YAML: click **Show code editor** in the card editor.
 
 ### Minimal configuration
 
@@ -415,7 +429,7 @@ Any entity with `next_rising` and `next_setting` attributes and an `above_horizo
 
 ## Roadmap
 
-- [ ] **Visual editor**: configure the card without YAML.
+- [x] **Visual editor**: configure the card without YAML.
 - [ ] Publication in the **default HACS store**.
 - [ ] `mode: elevation`: follow the real elevation curve of the sun instead of a linear progress.
 - [ ] `night_mode: moon_real`: show the moon between its own moonrise and moonset, and possibly during the day.
@@ -448,6 +462,8 @@ npm install
 
 The build fails if the bundle exceeds **60 kB**, to keep the card light.
 
+**Screenshots:** `npm run build && npm run screenshots` renders the built card with fictional data and regenerates the images in `docs/images/`. It uses your installed Chrome (`BROWSER_CHANNEL=msedge` to use Edge instead).
+
 **Testing in Home Assistant:** copy `dist/celestial-arc-card.js` to `<config>/www/`, add `/local/celestial-arc-card.js?v=dev` as a JavaScript module resource, and reload the browser after each build. Use a separate test dashboard.
 
 ### Project structure
@@ -456,6 +472,7 @@ The build fails if the bundle exceeds **60 kB**, to keep the card light.
 src/
 ├── celestial-arc-card.ts   # Card element: lifecycle, refresh timer, rendering, registration
 ├── config.ts               # Option validation and defaults
+├── editor.ts               # Visual editor (ha-form schema)
 ├── const.ts                # Card name, version, defaults
 ├── types.ts                # Configuration types
 ├── ha-types.ts             # Minimal Home Assistant frontend types

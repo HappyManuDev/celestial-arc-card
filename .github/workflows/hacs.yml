@@ -19,5 +19,3 @@ jobs:
       - uses: hacs/action@main
         with:
           category: plugin
-          # TODO: remove once screenshots are added to the README (required for the default store).
-          ignore: images

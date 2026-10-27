@@ -1,13 +1,13 @@
 # Celestial Arc Card
 
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/docs/faq/custom_repositories)
+[![GitHub release](https://img.shields.io/github/v/release/HappyManuDev/celestial-arc-card)](https://github.com/HappyManuDev/celestial-arc-card/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A [Home Assistant](https://www.home-assistant.io/) Lovelace card that shows the **sun travelling along an arc from sunrise to sunset**, and the **moon, with its real phase, from sunset to sunrise**.
 
-> [!WARNING]
-> **Work in progress — no release published yet.**
-> The installation instructions below apply from the first release (`v0.1.0`). Until then, you can build the card yourself (see [Development](#development)).
+> [!NOTE]
+> **Early version (0.x).** The card works and is tested, but options may still change before 1.0. A visual editor is coming: for now, the card is configured in YAML. Feedback is welcome in the [issues](https://github.com/HappyManuDev/celestial-arc-card/issues).
 
 ---
 

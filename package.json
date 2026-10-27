@@ -1,6 +1,6 @@
 {
   "name": "celestial-arc-card",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A Home Assistant Lovelace card showing the sun and moon travelling along an arc between sunrise and sunset.",
   "type": "module",
   "module": "dist/celestial-arc-card.js",

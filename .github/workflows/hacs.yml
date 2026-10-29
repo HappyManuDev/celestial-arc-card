@@ -16,6 +16,8 @@ jobs:
     name: HACS action
     runs-on: ubuntu-latest
     steps:
+      # Left on main on purpose: HACS documents it this way, the last tagged
+      # release dates from 2022, and main runs the checks hacs/default applies today.
       - uses: hacs/action@main
         with:
           category: plugin

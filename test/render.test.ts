@@ -211,6 +211,18 @@ describe('actions', () => {
     expect(events.map((event) => event.detail.action)).toEqual(['hold']);
   });
 
+  it('fires the tap action once when Enter is held down', async () => {
+    const card = await renderCard(mockHass('above_horizon', DAY));
+    const events: Event[] = [];
+    card.addEventListener('hass-action', (event) => events.push(event));
+
+    card.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    card.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', repeat: true }));
+    card.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', repeat: true }));
+
+    expect(events).toHaveLength(1);
+  });
+
   it('does nothing when actions are disabled', async () => {
     const card = await renderCard(mockHass('above_horizon', DAY), {
       tap_action: { action: 'none' },

@@ -1,3 +1,4 @@
+import { getTimes } from 'suncalc';
 import { describe, expect, it } from 'vitest';
 
 import { getSunPeriod } from '../src/astro/sun';
@@ -20,6 +21,10 @@ function sunEntity(state: string, attributes: Record<string, unknown>): HassEnti
 const SUNRISE = new Date('2024-06-21T03:47:00Z');
 const SUNSET = new Date('2024-06-21T19:58:00Z');
 const NEXT_SUNRISE = new Date('2024-06-22T03:47:00Z');
+
+// Exact suncalc time of the event that day, which can differ slightly from HA's.
+const suncalcEvent = (event: 'sunrise' | 'sunset'): Date =>
+  getTimes(new Date('2024-06-21T12:00:00Z'), PARIS.latitude, PARIS.longitude)[event]!;
 
 const expectClose = (actual: Date | undefined, expected: Date) =>
   expect(Math.abs(actual!.getTime() - expected.getTime())).toBeLessThan(5 * MINUTE);
@@ -68,6 +73,36 @@ describe('getSunPeriod', () => {
       PARIS,
     );
     expectClose(period?.start, SUNSET);
+  });
+
+  it('keeps today as the start when HA reports sunrise slightly before suncalc', () => {
+    const sunrise = suncalcEvent('sunrise');
+    const now = new Date(sunrise.getTime() - 2 * MINUTE);
+    const period = getSunPeriod(
+      sunEntity('above_horizon', {
+        next_setting: SUNSET.toISOString(),
+        next_rising: NEXT_SUNRISE.toISOString(),
+      }),
+      now,
+      PARIS,
+    );
+    expect(period?.start).toEqual(sunrise);
+    expect(period?.progress).toBe(0);
+  });
+
+  it('keeps today as the start when HA reports sunset slightly before suncalc', () => {
+    const sunset = suncalcEvent('sunset');
+    const now = new Date(sunset.getTime() - 2 * MINUTE);
+    const period = getSunPeriod(
+      sunEntity('below_horizon', {
+        next_rising: NEXT_SUNRISE.toISOString(),
+        next_setting: '2024-06-22T19:58:00Z',
+      }),
+      now,
+      PARIS,
+    );
+    expect(period?.start).toEqual(sunset);
+    expect(period?.progress).toBe(0);
   });
 
   it('falls back to "next event minus 24h" without coordinates', () => {

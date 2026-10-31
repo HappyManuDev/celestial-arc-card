@@ -4,6 +4,9 @@ import type { HassEntity } from '../ha-types';
 import { progressBetween } from './progress';
 
 const DAY_MS = 24 * 3600 * 1000;
+// Home Assistant (astral, with the home elevation) and suncalc can disagree by
+// a few minutes: right after HA reports an event, suncalc's may still be ahead.
+const EVENT_TOLERANCE_MS = 15 * 60 * 1000;
 
 export interface Location {
   latitude: number;
@@ -29,7 +32,10 @@ function parseDate(value: unknown): Date | undefined {
   return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
-/** Most recent sunrise or sunset at or before `now`, computed with suncalc. */
+/**
+ * Most recent sunrise or sunset at or before `now` (give or take
+ * EVENT_TOLERANCE_MS), computed with suncalc.
+ */
 function previousEvent(
   event: 'sunrise' | 'sunset',
   now: Date,
@@ -39,7 +45,7 @@ function previousEvent(
   // is still ahead, the previous one belongs to the day before.
   for (const offset of [0, DAY_MS]) {
     const time = getTimes(new Date(now.getTime() - offset), latitude, longitude)[event];
-    if (time && time.getTime() <= now.getTime()) {
+    if (time && time.getTime() <= now.getTime() + EVENT_TOLERANCE_MS) {
       return time;
     }
   }

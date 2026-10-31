@@ -10,6 +10,9 @@ export const COLOR_KEYS: readonly (keyof ColorsConfig)[] = [
   'label',
 ];
 export const MIN_UPDATE_INTERVAL = 10;
+// Also keeps the delay far below the setInterval limit (~24.8 days), above
+// which browsers fire the timer immediately and the card re-renders in a loop.
+export const MAX_UPDATE_INTERVAL = 3600;
 
 export const DEFAULT_CONFIG: Omit<ResolvedConfig, 'type'> = {
   entity: DEFAULT_SUN_ENTITY,
@@ -46,9 +49,15 @@ export function resolveConfig(config: CelestialArcCardConfig): ResolvedConfig {
   }
   if (
     config.update_interval !== undefined &&
-    !(typeof config.update_interval === 'number' && config.update_interval >= MIN_UPDATE_INTERVAL)
+    !(
+      typeof config.update_interval === 'number' &&
+      config.update_interval >= MIN_UPDATE_INTERVAL &&
+      config.update_interval <= MAX_UPDATE_INTERVAL
+    )
   ) {
-    throw new Error(`"update_interval" must be a number of seconds ≥ ${MIN_UPDATE_INTERVAL}`);
+    throw new Error(
+      `"update_interval" must be a number of seconds between ${MIN_UPDATE_INTERVAL} and ${MAX_UPDATE_INTERVAL}`,
+    );
   }
   if (config.colors !== undefined) {
     if (typeof config.colors !== 'object' || config.colors === null) {

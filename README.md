@@ -166,12 +166,12 @@ hold_action:
 | `show_day_length` | boolean            | no       | `false`             | Show the length of the current period: “Day length 16h 11m” by day, “Night length 7h 49m” by night.   |
 | `show_moon_phase` | boolean            | no       | `false`             | Show the moon phase and its illuminated percentage, e.g. “Waxing gibbous · 78%”. Shown day and night. |
 | `background`      | boolean            | no       | `false`             | `false`: transparent card, no border or shadow. `true`: standard Home Assistant card background.      |
-| `update_interval` | number             | no       | `60`                | Refresh interval in seconds (minimum `10`).                                                           |
+| `update_interval` | number             | no       | `60`                | Refresh interval in seconds, between `10` and `3600`.                                                 |
 | `colors`          | map                | no       | theme               | Custom colors, see [Colors](#colors).                                                                 |
 | `tap_action`      | [action](#actions) | no       | `action: more-info` | Action on tap or click.                                                                               |
 | `hold_action`     | [action](#actions) | no       | `action: none`      | Action on long press (500 ms).                                                                        |
 
-An invalid option (unknown `night_mode`, `update_interval` below 10, unknown color key…) shows a clear error message in the dashboard instead of the card.
+An invalid option (unknown `night_mode`, `update_interval` outside 10–3600, unknown color key…) shows a clear error message in the dashboard instead of the card.
 
 ### Colors
 

@@ -41,7 +41,8 @@ export function bindActions(
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      onAction('tap');
+      // A key held down repeats: trigger the action once.
+      if (!event.repeat) onAction('tap');
     }
   };
   const onContextMenu = (event: Event) => {

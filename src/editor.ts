@@ -1,7 +1,7 @@
 import { css, html, LitElement, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { COLOR_KEYS, DEFAULT_CONFIG, MIN_UPDATE_INTERVAL } from './config';
+import { COLOR_KEYS, DEFAULT_CONFIG, MAX_UPDATE_INTERVAL, MIN_UPDATE_INTERVAL } from './config';
 import { EDITOR_TAG } from './const';
 import type { HomeAssistant } from './ha-types';
 import { localize } from './localize/localize';
@@ -47,7 +47,7 @@ function buildSchema(hass?: HomeAssistant): SchemaItem[] {
       selector: {
         number: {
           min: MIN_UPDATE_INTERVAL,
-          max: 3600,
+          max: MAX_UPDATE_INTERVAL,
           step: 10,
           mode: 'box',
           unit_of_measurement: 's',

@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "lit": "^3.3.3",
-    "suncalc": "^2.1.1"
+    "suncalc": "^2.1.4"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

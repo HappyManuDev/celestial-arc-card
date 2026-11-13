@@ -2,7 +2,7 @@ name: Release
 
 # release-please keeps a "chore: release x.y.z" pull request up to date from the
 # Conventional Commits on main. Merging it creates the tag and the GitHub release,
-# then this workflow builds the card and attaches celestial-arc-card.js for HACS.
+# then this workflow builds the card and attaches celestial-arc-card.js for the Marketplace.
 
 on:
   push:

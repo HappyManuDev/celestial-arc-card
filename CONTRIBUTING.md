@@ -56,4 +56,4 @@ The project uses [Conventional Commits](https://www.conventionalcommits.org/). R
 
 1. Merge pull requests into `main`.
 2. release-please opens or updates a `chore: release x.y.z` pull request with the version bump and the changelog.
-3. Merging that pull request creates the tag and the GitHub release; the `Release` workflow builds the card and attaches `celestial-arc-card.js`, which HACS installs.
+3. Merging that pull request creates the tag and the GitHub release; the `Release` workflow builds the card and attaches `celestial-arc-card.js`, which the Marketplace (and HACS before Home Assistant 2026.11) installs.

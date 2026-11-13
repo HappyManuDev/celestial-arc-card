@@ -1,6 +1,6 @@
 # Celestial Arc Card
 
-[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/docs/faq/custom_repositories)
+[![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=HappyManuDev&repository=celestial-arc-card&category=plugin)
 [![GitHub release](https://img.shields.io/github/v/release/HappyManuDev/celestial-arc-card)](https://github.com/HappyManuDev/celestial-arc-card/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -11,8 +11,7 @@ A [Home Assistant](https://www.home-assistant.io/) Lovelace card that shows the 
 | ![Sun on the arc in the afternoon, light theme, with title and day length](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-day.png) | ![Waxing crescent moon on the arc, dark theme, with night length and moon phase](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-night.png) | ![Morning sun on a beige dashboard with Montserrat font, in French](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-vintage.png) |
 |                                                      `background: true`<br>`title: Sun & Moon`<br>`show_day_length: true`                                                      |                                                        `background: true`<br>`show_day_length: true`<br>`show_moon_phase: true`                                                        |                                            [Vintage example](#vintage--warm-palette)<br>`show_moon_phase: true`<br>French locale                                            |
 
-> [!NOTE]
-> **Early version (0.x).** The card works and is tested, but options may still change before 1.0. Feedback is welcome in the [issues](https://github.com/HappyManuDev/celestial-arc-card/issues).
+Feedback and ideas are welcome in the [issues](https://github.com/HappyManuDev/celestial-arc-card/issues).
 
 ---
 
@@ -21,7 +20,8 @@ A [Home Assistant](https://www.home-assistant.io/) Lovelace card that shows the 
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-  - [HACS (recommended)](#hacs-recommended)
+  - [Marketplace (recommended)](#marketplace-recommended)
+  - [HACS (Home Assistant before 2026.11)](#hacs-home-assistant-before-202611)
   - [Manual](#manual)
 - [Configuration](#configuration)
   - [Minimal configuration](#minimal-configuration)
@@ -75,17 +75,31 @@ A [Home Assistant](https://www.home-assistant.io/) Lovelace card that shows the 
 
 ## Installation
 
-### HACS (recommended)
+### Marketplace (recommended)
 
-The card is not in the default HACS store yet. Add it as a **custom repository**:
+Since Home Assistant **2026.11**, community cards are installed from the built-in **Marketplace** (**Settings → Marketplace**), which replaces HACS.
+
+The card is not in the Marketplace catalog yet, so it is added as a **custom repository**:
+
+1. Click this button. It opens the card's page in the Marketplace of your Home Assistant instance:
+
+   [![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=HappyManuDev&repository=celestial-arc-card&category=plugin)
+
+2. Accept to add it as a custom repository (type **Dashboard**).
+3. Click **Download**.
+4. **Reload your browser** (clear the cache if needed, or restart the companion app).
+
+The Marketplace registers the dashboard resource automatically. If your dashboard resources are managed in YAML, add the resource yourself, as shown in the install dialog. Once the card is in the catalog, search for **Celestial Arc Card** under **Settings → Marketplace** and skip step 2.
+
+### HACS (Home Assistant before 2026.11)
 
 1. Open **HACS** in Home Assistant.
 2. Click the **⋮** menu (top right) → **Custom repositories**.
 3. Repository: `https://github.com/HappyManuDev/celestial-arc-card`. Type: **Dashboard**. Click **Add**.
 4. Search for **Celestial Arc Card** in HACS, open it and click **Download**.
-5. **Reload your browser** (clear the cache if needed, or restart the companion app).
+5. **Reload your browser**.
 
-HACS registers the dashboard resource automatically. When the card reaches the default HACS store, steps 2 and 3 will no longer be needed.
+HACS registers the dashboard resource automatically.
 
 ### Manual
 
@@ -103,7 +117,7 @@ HACS registers the dashboard resource automatically. When the card reaches the d
 4. Reload your browser.
 
 > [!TIP]
-> After a manual update, add a version suffix to the resource URL (for example `/local/celestial-arc-card.js?v=0.2.0`), so that browsers do not keep the old file in cache.
+> After a manual update, add a version suffix to the resource URL (for example `/local/celestial-arc-card.js?v=1.0.0`), so that browsers do not keep the old file in cache.
 
 To check that the card is loaded, open your browser's developer console: a `CELESTIAL ARC CARD vX.Y.Z` banner is printed.
 
@@ -430,7 +444,7 @@ Any entity with `next_rising` and `next_setting` attributes and an `above_horizo
 ## Roadmap
 
 - [x] **Visual editor**: configure the card without YAML.
-- [ ] Publication in the **default HACS store**.
+- [ ] Publication in the **Marketplace catalog** (the former default HACS store).
 - [ ] `mode: elevation`: follow the real elevation curve of the sun instead of a linear progress.
 - [ ] `night_mode: moon_real`: show the moon between its own moonrise and moonset, and possibly during the day.
 - [ ] Twilight zones (dawn and dusk) on the arc.

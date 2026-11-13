@@ -3,6 +3,14 @@
 All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.0](https://github.com/HappyManuDev/celestial-arc-card/compare/v0.2.1...v1.0.0) (2026-11-13)
+
+
+### Documentation
+
+* switch install instructions to the Home Assistant Marketplace ([f907070](https://github.com/HappyManuDev/celestial-arc-card/commit/f907070cd992d973042cd76459223fe00895e0d0))
+* switch install instructions to the Home Assistant Marketplace ([04b6264](https://github.com/HappyManuDev/celestial-arc-card/commit/04b62648dd7fa8986c0ea749e66345aa666e5575))
+
 ## [0.2.1](https://github.com/HappyManuDev/celestial-arc-card/compare/v0.2.0...v0.2.1) (2026-10-31)
 
 

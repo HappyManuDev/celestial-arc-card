@@ -1,5 +1,6 @@
 import type { ActionConfig, LovelaceCardConfig } from './ha-types';
 
+export type Layout = 'arc' | 'wave';
 export type NightMode = 'moon' | 'none';
 
 export interface ColorsConfig {
@@ -14,6 +15,7 @@ export interface CelestialArcCardConfig extends LovelaceCardConfig {
   type: string;
   entity?: string;
   title?: string;
+  layout?: Layout;
   night_mode?: NightMode;
   show_times?: boolean;
   show_day_length?: boolean;
@@ -31,6 +33,7 @@ export type ResolvedConfig = CelestialArcCardConfig &
     Pick<
       CelestialArcCardConfig,
       | 'entity'
+      | 'layout'
       | 'night_mode'
       | 'show_times'
       | 'show_day_length'

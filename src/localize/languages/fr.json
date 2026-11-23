@@ -19,6 +19,20 @@
     "night": "Soleil couché à {start}, lever à {end}, {percent} de la nuit écoulée",
     "unknown": "Arc du soleil et de la lune"
   },
+  "wave": {
+    "day": "Jour",
+    "night": "Nuit",
+    "dawn": {
+      "civil": "Aube civile",
+      "nautical": "Aube nautique",
+      "astronomical": "Aube astronomique"
+    },
+    "dusk": {
+      "civil": "Crépuscule civil",
+      "nautical": "Crépuscule nautique",
+      "astronomical": "Crépuscule astronomique"
+    }
+  },
   "warning": {
     "entity_not_found": "Entité introuvable : {entity}"
   },
@@ -28,6 +42,14 @@
       "helper": "En général sun.sun, fournie par l'intégration Soleil."
     },
     "title": { "label": "Titre (facultatif)" },
+    "layout": {
+      "label": "Style",
+      "helper": "Arc : avancement du jour ou de la nuit en cours. Vague : course du soleil sur 24 heures, avec les crépuscules."
+    },
+    "layout_options": {
+      "arc": "Arc (demi-cercle)",
+      "wave": "Vague (courbe sur 24 h)"
+    },
     "night_mode": {
       "label": "La nuit",
       "helper": "Ce qui se déplace sur l'arc entre le coucher et le lever du soleil."

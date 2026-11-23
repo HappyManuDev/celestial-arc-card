@@ -19,6 +19,20 @@
     "night": "Sun set at {start} and rises at {end}, {percent} of the night elapsed",
     "unknown": "Sun and moon arc"
   },
+  "wave": {
+    "day": "Day",
+    "night": "Night",
+    "dawn": {
+      "civil": "Civil dawn",
+      "nautical": "Nautical dawn",
+      "astronomical": "Astronomical dawn"
+    },
+    "dusk": {
+      "civil": "Civil dusk",
+      "nautical": "Nautical dusk",
+      "astronomical": "Astronomical dusk"
+    }
+  },
   "warning": {
     "entity_not_found": "Entity not found: {entity}"
   },
@@ -28,6 +42,14 @@
       "helper": "Usually sun.sun, provided by the Sun integration."
     },
     "title": { "label": "Title (optional)" },
+    "layout": {
+      "label": "Layout",
+      "helper": "Arc: progress of the current day or night. Wave: the sun's course over 24 hours, with twilights."
+    },
+    "layout_options": {
+      "arc": "Arc (half circle)",
+      "wave": "Wave (24-hour curve)"
+    },
     "night_mode": {
       "label": "At night",
       "helper": "What moves along the arc between sunset and sunrise."

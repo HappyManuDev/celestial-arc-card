@@ -101,6 +101,82 @@ export const cardStyles = css`
     font-size: 13px;
   }
 
+  /* Wave layout: same palette as the arc, twilight bands below the horizon. */
+  .wave-phase {
+    padding: 0 8px 4px;
+    color: var(--cac-label-color, var(--primary-text-color, #212121));
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .wave-day {
+    opacity: 0.12;
+  }
+
+  .wave-day-stop {
+    stop-color: var(--cac-day-arc-color, #c9a35a);
+  }
+
+  .wave-band {
+    fill: var(--cac-night-arc-color, #7c8ba1);
+  }
+
+  .wave-civil {
+    opacity: 0.1;
+  }
+
+  .wave-nautical {
+    opacity: 0.19;
+  }
+
+  .wave-astronomical {
+    opacity: 0.28;
+  }
+
+  .wave-night {
+    opacity: 0.38;
+  }
+
+  .wave-curve {
+    fill: none;
+    stroke-width: 2;
+    stroke-dasharray: 4 4;
+  }
+
+  .wave-curve-day {
+    stroke: var(--cac-day-arc-color, #c9a35a);
+    opacity: 0.85;
+  }
+
+  .wave-curve-night {
+    stroke: var(--cac-night-arc-color, #7c8ba1);
+    opacity: 0.8;
+  }
+
+  svg.wave .horizon {
+    opacity: 0.45;
+  }
+
+  .wave-event {
+    fill: var(--cac-day-arc-color, #c9a35a);
+  }
+
+  .wave-tick {
+    stroke: var(--secondary-text-color, #727272);
+    stroke-width: 1;
+    opacity: 0.5;
+  }
+
+  .wave-axis {
+    fill: var(--secondary-text-color, #727272);
+    font-size: 10px;
+  }
+
+  ha-card.wave .infos {
+    justify-content: flex-start;
+    padding: 4px 8px 0;
+  }
+
   .warning {
     padding: 16px;
     color: var(--error-color, #db4437);

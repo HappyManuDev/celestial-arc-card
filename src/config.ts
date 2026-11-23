@@ -1,6 +1,13 @@
 import { DEFAULT_SUN_ENTITY } from './const';
-import type { CelestialArcCardConfig, ColorsConfig, NightMode, ResolvedConfig } from './types';
+import type {
+  CelestialArcCardConfig,
+  ColorsConfig,
+  Layout,
+  NightMode,
+  ResolvedConfig,
+} from './types';
 
+export const LAYOUTS: readonly Layout[] = ['arc', 'wave'];
 export const NIGHT_MODES: readonly NightMode[] = ['moon', 'none'];
 export const COLOR_KEYS: readonly (keyof ColorsConfig)[] = [
   'day_arc',
@@ -16,6 +23,7 @@ export const MAX_UPDATE_INTERVAL = 3600;
 
 export const DEFAULT_CONFIG: Omit<ResolvedConfig, 'type'> = {
   entity: DEFAULT_SUN_ENTITY,
+  layout: 'arc',
   night_mode: 'moon',
   show_times: true,
   show_day_length: false,
@@ -38,6 +46,9 @@ export function resolveConfig(config: CelestialArcCardConfig): ResolvedConfig {
   }
   if (config.title !== undefined && typeof config.title !== 'string') {
     throw new Error('"title" must be a text');
+  }
+  if (config.layout !== undefined && !LAYOUTS.includes(config.layout)) {
+    throw new Error(`"layout" must be one of: ${LAYOUTS.join(', ')}`);
   }
   if (config.night_mode !== undefined && !NIGHT_MODES.includes(config.night_mode)) {
     throw new Error(`"night_mode" must be one of: ${NIGHT_MODES.join(', ')}`);

@@ -80,9 +80,35 @@ const SCENARIOS = [
     },
     config: { colors: { label: '#5c4a33' }, show_moon_phase: true },
   },
+  {
+    name: 'preview-wave-day',
+    theme: 'light',
+    width: 300,
+    now: '2024-12-21T13:15:00Z',
+    language: 'en',
+    sun: {
+      state: 'above_horizon',
+      next_setting: '2024-12-21T15:56:00Z',
+      next_rising: '2024-12-22T07:43:00Z',
+    },
+    config: { layout: 'wave', background: true, show_day_length: true },
+  },
+  {
+    name: 'preview-wave-night',
+    theme: 'dark',
+    width: 300,
+    now: '2024-06-11T21:10:00Z',
+    language: 'en',
+    sun: {
+      state: 'below_horizon',
+      next_rising: '2024-06-12T03:47:00Z',
+      next_setting: '2024-06-12T19:55:00Z',
+    },
+    config: { layout: 'wave', background: true, show_moon_phase: true },
+  },
 ];
 
-function pageHtml(theme) {
+function pageHtml(theme, width = 380) {
   const variables = Object.entries(theme)
     .filter(([key]) => key.startsWith('--'))
     .map(([key, value]) => `${key}: ${value};`)
@@ -95,7 +121,7 @@ function pageHtml(theme) {
     <style>
       html, body { margin: 0; background: ${theme.page}; }
       body { ${variables} font-family: ${theme.font}; --cac-font-family: ${theme.font}; }
-      #frame { width: 380px; padding: 20px; background: ${theme.page}; }
+      #frame { width: ${width}px; padding: 20px; background: ${theme.page}; }
     </style>
   </head>
   <body><div id="frame"></div></body>
@@ -110,7 +136,9 @@ try {
       viewport: { width: 420, height: 400 },
     });
     await page.clock.setFixedTime(new Date(scenario.now));
-    await page.setContent(pageHtml(THEMES[scenario.theme]), { waitUntil: 'networkidle' });
+    await page.setContent(pageHtml(THEMES[scenario.theme], scenario.width), {
+      waitUntil: 'networkidle',
+    });
     await page.addScriptTag({ path: bundle, type: 'module' });
     await page.waitForFunction(() => customElements.get('celestial-arc-card'));
 

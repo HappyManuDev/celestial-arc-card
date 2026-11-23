@@ -29,6 +29,7 @@ describe('resolveConfig', () => {
   it.each([
     [{ entity: 42 }, /entity/],
     [{ title: true }, /title/],
+    [{ layout: 'circle' }, /layout/],
     [{ night_mode: 'stars' }, /night_mode/],
     [{ show_times: 'yes' }, /show_times/],
     [{ update_interval: 2 }, /update_interval/],

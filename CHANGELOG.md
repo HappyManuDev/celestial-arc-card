@@ -3,6 +3,14 @@
 All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.1.0](https://github.com/HappyManuDev/celestial-arc-card/compare/v1.0.0...v1.1.0) (2026-11-23)
+
+
+### Features
+
+* add a wave layout with the sun's 24-hour course and twilights ([0655272](https://github.com/HappyManuDev/celestial-arc-card/commit/0655272b9fd6101ac2166c837f92ef90e6da0e59))
+* add a wave layout with the sun's 24-hour course and twilights ([4ea73ce](https://github.com/HappyManuDev/celestial-arc-card/commit/4ea73ce8112926fc8d5072d0fbb3612bf507760e))
+
 ## [1.0.0](https://github.com/HappyManuDev/celestial-arc-card/compare/v0.2.1...v1.0.0) (2026-11-13)
 
 

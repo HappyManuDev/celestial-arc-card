@@ -9,6 +9,10 @@ const DAY = {
   next_setting: '2024-06-21T19:58:00Z',
   next_rising: '2024-06-22T03:47:00Z',
 };
+const WINTER_NIGHT = {
+  next_rising: '2024-12-22T07:43:00Z',
+  next_setting: '2024-12-22T15:56:00Z',
+};
 const NIGHT = {
   next_rising: '2024-06-22T03:47:00Z',
   next_setting: '2024-06-22T19:58:00Z',
@@ -152,6 +156,105 @@ describe('rendering', () => {
     await card.updateComplete;
 
     expect(root(card).querySelector('.sun')!.getAttribute('cx')).not.toBe(before);
+  });
+
+  describe('wave layout', () => {
+    const WINTER_DAY = {
+      next_setting: '2024-12-21T15:56:00Z',
+      next_rising: '2024-12-22T07:43:00Z',
+    };
+
+    it('shows the sun on the 24-hour curve with the times on the horizon', async () => {
+      const card = await renderCard(mockHass('above_horizon', DAY), { layout: 'wave' });
+
+      expect(root(card).querySelector('ha-card')?.classList.contains('wave')).toBe(true);
+      expect(texts(card, '.wave-phase')[0]).toBe('Jour');
+      expect(root(card).querySelector('.wave-curve-day')).not.toBeNull();
+      expect(root(card).querySelector('.sun')).not.toBeNull();
+      const labels = texts(card, '.label');
+      expect(labels[0]).toMatch(/^05:4\d$/);
+      expect(labels[1]).toBe('21:58');
+      expect(texts(card, '.wave-axis')).toEqual(['06 h', '12 h', '18 h']);
+    });
+
+    it('places the marker at the current time of day', async () => {
+      // 14:00 in Paris = 7/12 of the default 300 px width.
+      const card = await renderCard(mockHass('above_horizon', DAY), { layout: 'wave' });
+
+      expect(Number(root(card).querySelector('.sun')!.getAttribute('cx'))).toBeCloseTo(175, 0);
+    });
+
+    it('shows the moon and the night phase at night', async () => {
+      vi.setSystemTime(new Date('2024-12-21T23:00:00Z'));
+      const card = await renderCard(mockHass('below_horizon', WINTER_NIGHT), { layout: 'wave' });
+
+      expect(texts(card, '.wave-phase')[0]).toBe('Nuit');
+      expect(root(card).querySelector('.moon')).not.toBeNull();
+      expect(root(card).querySelector('.sun')).toBeNull();
+      expect(texts(card, '.label')).toEqual(['08:43', expect.stringMatching(/^16:5\d$/)]);
+    });
+
+    it('names the twilight and draws its bands', async () => {
+      vi.setSystemTime(new Date('2024-12-21T17:00:00Z'));
+      const card = await renderCard(mockHass('below_horizon', WINTER_NIGHT), { layout: 'wave' });
+
+      expect(texts(card, '.wave-phase')[0]).toBe('Crépuscule nautique');
+      expect(root(card).querySelectorAll('.wave-band')).toHaveLength(4);
+    });
+
+    it('says dawn in the morning', async () => {
+      vi.setSystemTime(new Date('2024-12-22T07:20:00Z'));
+      const card = await renderCard(mockHass('below_horizon', WINTER_NIGHT), { layout: 'wave' });
+
+      expect(texts(card, '.wave-phase')[0]).toBe('Aube civile');
+    });
+
+    it('draws nothing below the horizon with night_mode: none', async () => {
+      vi.setSystemTime(new Date('2024-12-21T23:00:00Z'));
+      const card = await renderCard(mockHass('below_horizon', WINTER_NIGHT), {
+        layout: 'wave',
+        night_mode: 'none',
+      });
+
+      expect(root(card).querySelector('.moon')).toBeNull();
+      expect(root(card).querySelector('.wave-curve-night')).not.toBeNull();
+    });
+
+    it('follows the card options: background, infos, times', async () => {
+      vi.setSystemTime(new Date('2024-12-21T12:00:00Z'));
+      const card = await renderCard(mockHass('above_horizon', WINTER_DAY), {
+        layout: 'wave',
+        background: true,
+        show_day_length: true,
+        show_times: false,
+      });
+
+      expect(root(card).querySelector('ha-card')?.classList.contains('with-background')).toBe(true);
+      expect(texts(card, '.infos span')[0]).toMatch(/^Durée du jour 8 h \d\d min$/);
+      expect(root(card).querySelectorAll('.label')).toHaveLength(0);
+    });
+
+    it('still draws the curve during polar day', async () => {
+      const card = await renderCard(mockHass('above_horizon', {}), { layout: 'wave' });
+
+      expect(root(card).querySelector('.wave-curve-day')).not.toBeNull();
+      expect(root(card).querySelector('.sun')).not.toBeNull();
+      expect(root(card).querySelectorAll('.label')).toHaveLength(0);
+    });
+
+    it('keeps the screen reader description', async () => {
+      const card = await renderCard(mockHass('above_horizon', DAY), { layout: 'wave' });
+
+      expect(root(card).querySelector('ha-card')?.getAttribute('aria-label')).toMatch(
+        /^Soleil levé à 05:4\d, coucher à 21:58/,
+      );
+    });
+
+    it('takes half the width in sections views', async () => {
+      const card = await renderCard(mockHass('above_horizon', DAY), { layout: 'wave' });
+
+      expect(card.getGridOptions().columns).toBe(6);
+    });
   });
 
   it('ignores hass updates that do not concern the sun entity', async () => {

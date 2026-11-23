@@ -2,9 +2,17 @@ import { html, LitElement, nothing, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { getMoonPhase } from './astro/moon';
+import { getMoonPhase, type MoonPhase } from './astro/moon';
 import { arcPoint } from './astro/progress';
 import { getSunPeriod, type SunPeriod } from './astro/sun';
+import {
+  horizonLevel,
+  isMorning,
+  skyPhase,
+  twilightLevels,
+  waveElevation,
+  waveShape,
+} from './astro/wave';
 import { resolveConfig } from './config';
 import {
   CARD_DESCRIPTION,
@@ -22,11 +30,18 @@ import { ARC, renderArc, VIEWBOX_HEIGHT, VIEWBOX_WIDTH } from './render/arc';
 import { renderLabels } from './render/labels';
 import { renderMoon } from './render/moon-marker';
 import { renderSun } from './render/sun-marker';
+import {
+  AXIS_HOURS,
+  DEFAULT_WAVE_WIDTH,
+  renderWave,
+  WAVE_HEIGHT,
+  type WaveView,
+} from './render/wave';
 import { cardStyles } from './styles';
 import type { CelestialArcCardConfig, ColorsConfig, ResolvedConfig } from './types';
 import { type ActionKind, bindActions, hasAction } from './utils/actions';
 import { formatDuration, formatMoonPhase, formatPercent } from './utils/format';
-import { formatTime } from './utils/time-format';
+import { formatHour, formatTime, minutesOfDay } from './utils/time-format';
 
 const COLOR_VARIABLES: Record<keyof ColorsConfig, string> = {
   day_arc: '--cac-day-arc-color',
@@ -41,8 +56,12 @@ export class CelestialArcCard extends LitElement {
 
   @state() private _config?: ResolvedConfig;
 
+  /** Drawing width of the wave layout, kept equal to its width in pixels. */
+  @state() private _waveWidth = DEFAULT_WAVE_WIDTH;
+
   private _timer?: ReturnType<typeof setInterval>;
   private _unbindActions?: () => void;
+  private _resizeObserver?: ResizeObserver;
 
   public static getStubConfig(): Partial<CelestialArcCardConfig> {
     return { entity: DEFAULT_SUN_ENTITY };
@@ -60,17 +79,24 @@ export class CelestialArcCard extends LitElement {
   }
 
   public getCardSize(): number {
-    return 2 + (this._config?.title ? 1 : 0);
+    const base = this._config?.layout === 'wave' ? 4 : 2;
+    return base + (this._config?.title ? 1 : 0);
   }
 
   public getGridOptions(): LovelaceGridOptions {
-    return { columns: 12, rows: 'auto', min_columns: 4 };
+    return this._config?.layout === 'wave'
+      ? { columns: 6, rows: 'auto', min_columns: 3 }
+      : { columns: 12, rows: 'auto', min_columns: 4 };
   }
 
   public connectedCallback(): void {
     super.connectedCallback();
     this._startTimer();
     this._unbindActions = bindActions(this, (kind) => this._handleAction(kind));
+    if (typeof ResizeObserver !== 'undefined') {
+      this._resizeObserver = new ResizeObserver(() => this._measureWave());
+      this._resizeObserver.observe(this);
+    }
   }
 
   public disconnectedCallback(): void {
@@ -79,6 +105,15 @@ export class CelestialArcCard extends LitElement {
     this._timer = undefined;
     this._unbindActions?.();
     this._unbindActions = undefined;
+    this._resizeObserver?.disconnect();
+    this._resizeObserver = undefined;
+  }
+
+  private _measureWave(): void {
+    const width = Math.round(this.shadowRoot?.querySelector('svg.wave')?.clientWidth ?? 0);
+    if (width > 0 && width !== this._waveWidth) {
+      this._waveWidth = width;
+    }
   }
 
   /** Re-renders periodically so the marker keeps moving between sun.sun updates. */
@@ -167,20 +202,7 @@ export class CelestialArcCard extends LitElement {
     const period = getSunPeriod(sun, now, { latitude, longitude });
     const isDay = period?.isDay ?? sun.state === 'above_horizon';
     const moon = getMoonPhase(now);
-
-    let marker: unknown = nothing;
-    let labels: unknown = nothing;
-    if (period) {
-      const position = arcPoint(period.progress, ARC);
-      if (period.isDay) {
-        marker = renderSun(position);
-      } else if (config.night_mode === 'moon') {
-        marker = renderMoon(position, moon, (latitude ?? 0) < 0);
-      }
-      if (config.show_times) {
-        labels = renderLabels(formatTime(period.start, hass), formatTime(period.end, hass));
-      }
-    }
+    const southern = (latitude ?? 0) < 0;
 
     const infos: string[] = [];
     if (config.show_day_length && period) {
@@ -191,16 +213,32 @@ export class CelestialArcCard extends LitElement {
       infos.push(formatMoonPhase(moon, hass));
     }
 
-    const interactive = hasAction(config.tap_action) || hasAction(config.hold_action);
+    if (config.layout === 'wave') {
+      return this._renderCard(
+        config.background ? 'with-background wave' : 'wave',
+        period,
+        this._renderWave(period, isDay, now, moon, southern, infos),
+      );
+    }
 
-    return html`
-      <ha-card
-        class=${config.background ? 'with-background' : ''}
-        style=${styleMap(this._colorStyles())}
-        tabindex=${interactive ? '0' : '-1'}
-        role=${interactive ? 'button' : 'img'}
-        aria-label=${this._ariaLabel(period)}
-      >
+    let marker: unknown = nothing;
+    let labels: unknown = nothing;
+    if (period) {
+      const position = arcPoint(period.progress, ARC);
+      if (period.isDay) {
+        marker = renderSun(position);
+      } else if (config.night_mode === 'moon') {
+        marker = renderMoon(position, moon, southern);
+      }
+      if (config.show_times) {
+        labels = renderLabels(formatTime(period.start, hass), formatTime(period.end, hass));
+      }
+    }
+
+    return this._renderCard(
+      config.background ? 'with-background' : '',
+      period,
+      html`
         ${config.title ? html`<div class="title">${config.title}</div>` : nothing}
         <svg
           class=${isDay ? 'day' : 'night'}
@@ -215,7 +253,97 @@ export class CelestialArcCard extends LitElement {
             ? html`<div class="infos">${infos.map((info) => html`<span>${info}</span>`)}</div>`
             : nothing
         }
+      `,
+    );
+  }
+
+  private _renderCard(className: string, period: SunPeriod | undefined, content: unknown) {
+    const config = this._config!;
+    const interactive = hasAction(config.tap_action) || hasAction(config.hold_action);
+    return html`
+      <ha-card
+        class=${className}
+        style=${styleMap(this._colorStyles())}
+        tabindex=${interactive ? '0' : '-1'}
+        role=${interactive ? 'button' : 'img'}
+        aria-label=${this._ariaLabel(period)}
+      >
+        ${content}
       </ha-card>
+    `;
+  }
+
+  /**
+   * 24-hour layout: the sun on its daily elevation curve, crossing the
+   * horizon at sunrise and sunset, above the twilight bands.
+   */
+  private _renderWave(
+    period: SunPeriod | undefined,
+    isDay: boolean,
+    now: Date,
+    moon: MoonPhase,
+    southern: boolean,
+    infos: string[],
+  ) {
+    const config = this._config!;
+    const hass = this.hass!;
+    const { latitude, longitude } = hass.config ?? {};
+    // Polar day or night: a curve entirely above or below the horizon.
+    const shape = period ? waveShape(period) : undefined;
+    const noonMinutes = shape ? minutesOfDay(shape.noon, hass) : 720;
+    const horizon = shape ? horizonLevel(shape.dayLength) : isDay ? -1 : 1;
+    const levels =
+      shape && Number.isFinite(latitude) && Number.isFinite(longitude)
+        ? twilightLevels(shape.noon, { latitude, longitude })
+        : undefined;
+
+    const nowMinutes = minutesOfDay(now, hass);
+    const phase = skyPhase(waveElevation(nowMinutes, noonMinutes), horizon, levels);
+    const phaseLabel =
+      phase === 'day' || phase === 'night'
+        ? localize(hass, `wave.${phase}`)
+        : localize(hass, `wave.${isMorning(nowMinutes, noonMinutes) ? 'dawn' : 'dusk'}.${phase}`);
+
+    // By day the period runs sunrise → sunset, by night sunset → sunrise.
+    let times: WaveView['times'];
+    if (period && config.show_times) {
+      const [sunrise, sunset] = isDay ? [period.start, period.end] : [period.end, period.start];
+      times = {
+        sunrise: minutesOfDay(sunrise, hass),
+        sunset: minutesOfDay(sunset, hass),
+        sunriseLabel: formatTime(sunrise, hass),
+        sunsetLabel: formatTime(sunset, hass),
+      };
+    }
+
+    const width = this._waveWidth;
+    return html`
+      ${config.title ? html`<div class="title">${config.title}</div>` : nothing}
+      <div class="wave-phase">${phaseLabel}</div>
+      <svg
+        class="wave"
+        viewBox="0 0 ${width} ${WAVE_HEIGHT}"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        ${renderWave({
+          width,
+          noonMinutes,
+          nowMinutes,
+          horizon,
+          levels,
+          times,
+          axisLabels: AXIS_HOURS.map((hour) => formatHour(hour, hass)),
+          showMoon: config.night_mode === 'moon',
+          moon,
+          southern,
+        })}
+      </svg>
+      ${
+        infos.length
+          ? html`<div class="infos">${infos.map((info) => html`<span>${info}</span>`)}</div>`
+          : nothing
+      }
     `;
   }
 

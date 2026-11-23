@@ -21,6 +21,18 @@ function buildSchema(hass?: HomeAssistant): SchemaItem[] {
     { name: 'entity', selector: { entity: { filter: { domain: 'sun' } } } },
     { name: 'title', selector: { text: {} } },
     {
+      name: 'layout',
+      selector: {
+        select: {
+          mode: 'dropdown',
+          options: [
+            { value: 'arc', label: localize(hass, 'editor.layout_options.arc') },
+            { value: 'wave', label: localize(hass, 'editor.layout_options.wave') },
+          ],
+        },
+      },
+    },
+    {
       name: 'night_mode',
       selector: {
         select: {

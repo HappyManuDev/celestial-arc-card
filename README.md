@@ -11,6 +11,13 @@ A [Home Assistant](https://www.home-assistant.io/) Lovelace card that shows the 
 | ![Sun on the arc in the afternoon, light theme, with title and day length](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-day.png) | ![Waxing crescent moon on the arc, dark theme, with night length and moon phase](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-night.png) | ![Morning sun on a beige dashboard with Montserrat font, in French](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-vintage.png) |
 |                                                      `background: true`<br>`title: Sun & Moon`<br>`show_day_length: true`                                                      |                                                        `background: true`<br>`show_day_length: true`<br>`show_moon_phase: true`                                                        |                                            [Vintage example](#vintage--warm-palette)<br>`show_moon_phase: true`<br>French locale                                            |
 
+**New:** a second layout, `wave`, shows the **sun's course over 24 hours**, crossing the horizon at sunrise and sunset, above the **twilight bands**:
+
+|                                                                                                       Wave, winter day, light theme                                                                                                        |                                                                                          Wave, summer night, dark theme                                                                                          |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| ![Wave layout on a winter afternoon: the sun on its 24-hour curve, sunrise and sunset times on the horizon, twilight bands below](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-wave-day.png) | ![Wave layout during nautical dusk in summer: the moon below the horizon, no astronomical night band](https://raw.githubusercontent.com/HappyManuDev/celestial-arc-card/main/docs/images/preview-wave-night.png) |
+|                                                                                      `layout: wave`<br>`background: true`<br>`show_day_length: true`                                                                                       |                                                                         `layout: wave`<br>`background: true`<br>`show_moon_phase: true`                                                                          |
+
 Feedback and ideas are welcome in the [issues](https://github.com/HappyManuDev/celestial-arc-card/issues).
 
 ---
@@ -51,9 +58,10 @@ Feedback and ideas are welcome in the [issues](https://github.com/HappyManuDev/c
 
 - ☀️ **Sun arc**: during the day, the sun moves along a half circle from the **last sunrise** to the **next sunset**.
 - 🌙 **Moon arc**: at night, the moon moves from the **last sunset** to the **next sunrise**, drawn with its **real phase** (crescent, quarter, gibbous, full…). It is mirrored in the southern hemisphere.
+- 🌊 **Wave layout**: the sun's course over 24 hours, crossing a horizon line at sunrise and sunset, with the civil, nautical and astronomical **twilights** drawn below and the current phase of the sky (day, dawn, dusk, night). See [The wave layout](#the-wave-layout).
 - 🎯 **Accurate times**: the start of the current period is computed astronomically from your Home Assistant location, rather than estimated.
 - 🔄 **Always moving**: the card refreshes itself every minute (configurable), so the marker keeps moving even when `sun.sun` does not update. That happens a lot at night.
-- ⚡ **Lightweight**: about 15 kB gzipped, and it only re-renders when something relevant changes (the sun entity, your language or locale settings, the clock).
+- ⚡ **Lightweight**: about 20 kB gzipped, and it only re-renders when something relevant changes (the sun entity, your language or locale settings, the clock).
 - 🕐 **Respects your profile**: times follow your Home Assistant user profile (12 h or 24 h, server or browser time zone, language).
 - 📏 **Optional information**: day or night length, and the moon phase with its illuminated percentage.
 - 🎨 **Fully themable**: transparent by default, it follows the light and dark themes, and every color can be changed through options, CSS variables, themes or card-mod.
@@ -129,7 +137,7 @@ To check that the card is loaded, open your browser's developer console: a `CELE
 
 Edit a dashboard, click **Add card** and search for **Celestial Arc Card**. Every option can be set from the form:
 
-- sun entity, title, what to show at night, information to display, card background, refresh interval;
+- sun entity, title, layout (arc or wave), what to show at night, information to display, card background, refresh interval;
 - **Colors** section: any CSS color, leave a field empty to keep the default;
 - **Interactions** section: tap and hold actions.
 
@@ -149,6 +157,7 @@ type: custom:celestial-arc-card
 type: custom:celestial-arc-card
 entity: sun.sun
 title: Sky
+layout: arc
 night_mode: moon
 show_times: true
 show_day_length: true
@@ -170,20 +179,21 @@ hold_action:
 
 ### Options
 
-| Option            | Type               | Required | Default             | Description                                                                                           |
-| ----------------- | ------------------ | -------- | ------------------- | ----------------------------------------------------------------------------------------------------- |
-| `type`            | string             | **yes**  | -                   | `custom:celestial-arc-card`                                                                           |
-| `entity`          | string             | no       | `sun.sun`           | Sun entity providing `next_rising` and `next_setting`.                                                |
-| `title`           | string             | no       | -                   | Title shown above the arc.                                                                            |
-| `night_mode`      | `moon` \| `none`   | no       | `moon`              | What to show at night: the moon with its real phase, or nothing (arc only).                           |
-| `show_times`      | boolean            | no       | `true`              | Show the start and end times of the current period under the arc.                                     |
-| `show_day_length` | boolean            | no       | `false`             | Show the length of the current period: “Day length 16h 11m” by day, “Night length 7h 49m” by night.   |
-| `show_moon_phase` | boolean            | no       | `false`             | Show the moon phase and its illuminated percentage, e.g. “Waxing gibbous · 78%”. Shown day and night. |
-| `background`      | boolean            | no       | `false`             | `false`: transparent card, no border or shadow. `true`: standard Home Assistant card background.      |
-| `update_interval` | number             | no       | `60`                | Refresh interval in seconds, between `10` and `3600`.                                                 |
-| `colors`          | map                | no       | theme               | Custom colors, see [Colors](#colors).                                                                 |
-| `tap_action`      | [action](#actions) | no       | `action: more-info` | Action on tap or click.                                                                               |
-| `hold_action`     | [action](#actions) | no       | `action: none`      | Action on long press (500 ms).                                                                        |
+| Option            | Type               | Required | Default             | Description                                                                                                      |
+| ----------------- | ------------------ | -------- | ------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `type`            | string             | **yes**  | -                   | `custom:celestial-arc-card`                                                                                      |
+| `entity`          | string             | no       | `sun.sun`           | Sun entity providing `next_rising` and `next_setting`.                                                           |
+| `title`           | string             | no       | -                   | Title shown above the arc.                                                                                       |
+| `layout`          | `arc` \| `wave`    | no       | `arc`               | `arc`: half circle for the current day or night. `wave`: 24-hour curve, see [The wave layout](#the-wave-layout). |
+| `night_mode`      | `moon` \| `none`   | no       | `moon`              | What to show at night: the moon with its real phase, or nothing (arc only).                                      |
+| `show_times`      | boolean            | no       | `true`              | Show the start and end times of the current period under the arc.                                                |
+| `show_day_length` | boolean            | no       | `false`             | Show the length of the current period: “Day length 16h 11m” by day, “Night length 7h 49m” by night.              |
+| `show_moon_phase` | boolean            | no       | `false`             | Show the moon phase and its illuminated percentage, e.g. “Waxing gibbous · 78%”. Shown day and night.            |
+| `background`      | boolean            | no       | `false`             | `false`: transparent card, no border or shadow. `true`: standard Home Assistant card background.                 |
+| `update_interval` | number             | no       | `60`                | Refresh interval in seconds, between `10` and `3600`.                                                            |
+| `colors`          | map                | no       | theme               | Custom colors, see [Colors](#colors).                                                                            |
+| `tap_action`      | [action](#actions) | no       | `action: more-info` | Action on tap or click.                                                                                          |
+| `hold_action`     | [action](#actions) | no       | `action: none`      | Action on long press (500 ms).                                                                                   |
 
 An invalid option (unknown `night_mode`, `update_interval` outside 10–3600, unknown color key…) shows a clear error message in the dashboard instead of the card.
 
@@ -342,12 +352,32 @@ colors:
 
 ### The arc
 
-The card shows a half circle above a horizon line:
+With the default `layout: arc`, the card shows a half circle above a horizon line:
 
 - **By day** (`sun.sun` is `above_horizon`), the period runs from the **last sunrise** to the **next sunset**, and the sun is drawn on the arc.
 - **By night** (`below_horizon`), the period runs from the **last sunset** to the **next sunrise**, and the moon is drawn on the arc (or nothing, with `night_mode: none`).
 
 The position on the arc is the **elapsed fraction of the current period**: 0% on the left, 50% at the top, 100% on the right. This is a progress indicator, not the actual height of the sun in the sky.
+
+### The wave layout
+
+With `layout: wave`, the card shows a whole day, from midnight (left) to midnight (right), with the same colors as the arc:
+
+- The **curve** is the course of the sun: a cosine peaking at **solar noon**, halfway between sunrise and sunset. It is dashed in the day arc color above the horizon, in the night arc color below.
+- The **horizon line** is placed so that the curve crosses it exactly at **sunrise and sunset**, whose times are written next to the crossings. The hump is wide in summer and narrow in winter.
+- Below the horizon, **bands** get darker for the civil, nautical and astronomical twilights (sun at −6°, −12° and −18°), then the night. A band ends where the curve reaches it. Near the summer solstice at mid latitudes, the sun never goes below −18°: there is no night band.
+- The **marker** is at the current time of day: the sun above the horizon, the moon with its phase below it (nothing with `night_mode: none`).
+- The **phase of the sky** is written above: _Day_, _Civil dawn_, _Nautical dusk_, _Night_…
+- An **hour axis** (6, 12, 18 h) follows your time format.
+
+The curve shows the shape of the day, not the exact elevation of the sun in degrees. Twilight times are computed with SunCalc from your home location: without it, everything below the horizon is shown as night. All the options apply (`background`, `colors`, `show_times`, information line). In sections views the card takes half the width by default.
+
+```yaml
+type: custom:celestial-arc-card
+layout: wave
+background: true
+show_day_length: true
+```
 
 ### Where the times come from
 
@@ -389,7 +419,7 @@ The card uses the language of your Home Assistant user profile. Regional variant
 | English  | `en` |
 | Français | `fr` |
 
-Translated texts: moon phase names, day and night length, error messages, and the screen reader description. Times and percentages are formatted with your locale (`78 %` in French, `78%` in English).
+Translated texts: moon phase names, day, dawn, dusk and night names of the wave layout, day and night length, error messages, and the screen reader description. Times and percentages are formatted with your locale (`78 %` in French, `78%` in English).
 
 **Adding a language:**
 
@@ -447,7 +477,7 @@ Any entity with `next_rising` and `next_setting` attributes and an `above_horizo
 - [ ] Publication in the **Marketplace catalog** (the former default HACS store).
 - [ ] `mode: elevation`: follow the real elevation curve of the sun instead of a linear progress.
 - [ ] `night_mode: moon_real`: show the moon between its own moonrise and moonset, and possibly during the day.
-- [ ] Twilight zones (dawn and dusk) on the arc.
+- [x] Twilight zones (dawn and dusk): shown by the `wave` layout.
 - [ ] More languages (contributions welcome).
 
 Ideas and feedback: [open an issue](https://github.com/HappyManuDev/celestial-arc-card/issues).
@@ -494,12 +524,14 @@ src/
 ├── astro/
 │   ├── progress.ts         # Elapsed fraction and position on the arc (pure functions)
 │   ├── sun.ts              # Current day/night period from sun.sun + SunCalc
+│   ├── wave.ts             # Solar noon, day length, twilight levels of the wave layout
 │   └── moon.ts             # Moon phase and SVG path of its lit part
 ├── render/
 │   ├── arc.ts              # Arc, horizon and SVG geometry
 │   ├── sun-marker.ts       # Sun marker
 │   ├── moon-marker.ts      # Moon marker
-│   └── labels.ts           # Times under the arc
+│   ├── labels.ts           # Times under the arc
+│   └── wave.ts             # Wave layout: curve, twilight bands, times, hour axis
 ├── localize/
 │   ├── localize.ts         # Translation lookup with English fallback
 │   └── languages/          # en.json, fr.json

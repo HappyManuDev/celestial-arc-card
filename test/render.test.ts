@@ -257,6 +257,89 @@ describe('rendering', () => {
     });
   });
 
+  describe('sky layout', () => {
+    it('draws the sun and moon curves with their times and the current time', async () => {
+      const card = await renderCard(mockHass('above_horizon', DAY), { layout: 'sky' });
+
+      expect(root(card).querySelector('ha-card')?.classList.contains('sky')).toBe(true);
+      expect(root(card).querySelector('svg.sky')).not.toBeNull();
+      expect(root(card).querySelector('.sky-sun')).not.toBeNull();
+      expect(root(card).querySelector('.sky-moon')).not.toBeNull();
+      expect(root(card).querySelector('.sun')).not.toBeNull();
+      expect(root(card).querySelector('.moon')).not.toBeNull();
+      const times = texts(card, '.sky-time');
+      expect(times).toContainEqual(expect.stringMatching(/^↑ 05:4\d$/));
+      expect(times).toContainEqual(expect.stringMatching(/^↓ 21:5\d$/));
+      expect(root(card).querySelectorAll('.sky-event-moon').length).toBeGreaterThan(0);
+      expect(texts(card, '.sky-now-label')).toEqual(['14:00']);
+      expect(root(card).querySelector('.sky-axis')).toBeNull();
+    });
+
+    it('places the markers at the current time of day', async () => {
+      // 14:00 in Paris = 7/12 of the default 300 px width.
+      const card = await renderCard(mockHass('above_horizon', DAY), { layout: 'sky' });
+
+      expect(Number(root(card).querySelector('.sun')!.getAttribute('cx'))).toBeCloseTo(175, 0);
+      expect(Number(root(card).querySelector('.moon-halo')!.getAttribute('cx'))).toBeCloseTo(
+        175,
+        0,
+      );
+    });
+
+    it('keeps it simple by default: no summary, no infos', async () => {
+      const card = await renderCard(mockHass('above_horizon', DAY), { layout: 'sky' });
+
+      expect(root(card).querySelector('.sky-summary')).toBeNull();
+      expect(root(card).querySelector('.infos')).toBeNull();
+    });
+
+    it('shows the summary sentence and the legend when enabled', async () => {
+      const card = await renderCard(mockHass('above_horizon', DAY), {
+        layout: 'sky',
+        show_summary: true,
+      });
+
+      expect(texts(card, '.sky-summary')[0]?.replace(/\s+/g, ' ')).toMatch(
+        /^Le soleil est là pour encore 7 h 5\d min\. La lune se (lève|couche) (demain )?à \d\d:\d\d\.$/,
+      );
+      expect(texts(card, '.sky-legend span')).toEqual(['Soleil', 'Lune']);
+    });
+
+    it('hides the moon with night_mode: none', async () => {
+      const card = await renderCard(mockHass('above_horizon', DAY), {
+        layout: 'sky',
+        night_mode: 'none',
+      });
+
+      expect(root(card).querySelector('.sky-moon')).toBeNull();
+      expect(root(card).querySelector('.moon')).toBeNull();
+      expect(root(card).querySelector('.sky-event-moon')).toBeNull();
+    });
+
+    it('hides the times with show_times: false', async () => {
+      const card = await renderCard(mockHass('above_horizon', DAY), {
+        layout: 'sky',
+        show_times: false,
+      });
+
+      expect(root(card).querySelectorAll('.sky-time')).toHaveLength(0);
+    });
+
+    it('asks for the home location when it is missing', async () => {
+      const hass = mockHass('above_horizon', DAY);
+      hass.config = { ...hass.config, latitude: undefined as unknown as number };
+      const card = await renderCard(hass, { layout: 'sky' });
+
+      expect(texts(card, '.warning')[0]).toMatch(/position de votre domicile/);
+    });
+
+    it('takes half the width in sections views', async () => {
+      const card = await renderCard(mockHass('above_horizon', DAY), { layout: 'sky' });
+
+      expect(card.getGridOptions().columns).toBe(6);
+    });
+  });
+
   it('ignores hass updates that do not concern the sun entity', async () => {
     const hass = mockHass('above_horizon', DAY);
     const card = await renderCard(hass);

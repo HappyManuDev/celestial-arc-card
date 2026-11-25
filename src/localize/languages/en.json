@@ -33,8 +33,21 @@
       "astronomical": "Astronomical dusk"
     }
   },
+  "sky": {
+    "sun_up": "The sun is up for another {duration}.",
+    "sun_down": "The sun rises in {duration}.",
+    "sun_always_up": "The sun does not set.",
+    "sun_always_down": "The sun does not rise.",
+    "moon_rises": "The moon rises at {time}.",
+    "moon_sets": "The moon sets at {time}.",
+    "moon_rises_tomorrow": "The moon rises tomorrow at {time}.",
+    "moon_sets_tomorrow": "The moon sets tomorrow at {time}.",
+    "legend_sun": "Sun",
+    "legend_moon": "Moon"
+  },
   "warning": {
-    "entity_not_found": "Entity not found: {entity}"
+    "entity_not_found": "Entity not found: {entity}",
+    "no_location": "Set your home location in Settings → System → General to use the sky layout."
   },
   "editor": {
     "entity": {
@@ -44,11 +57,12 @@
     "title": { "label": "Title (optional)" },
     "layout": {
       "label": "Layout",
-      "helper": "Arc: progress of the current day or night. Wave: the sun's course over 24 hours, with twilights."
+      "helper": "Arc: progress of the current day or night. Wave: the sun's course over 24 hours, with twilights. Sky: the real altitude of the sun and the moon over 24 hours."
     },
     "layout_options": {
       "arc": "Arc (half circle)",
-      "wave": "Wave (24-hour curve)"
+      "wave": "Wave (24-hour curve)",
+      "sky": "Sky (sun and moon over 24 hours)"
     },
     "night_mode": {
       "label": "At night",
@@ -61,6 +75,7 @@
     "show_times": { "label": "Sunrise / sunset times" },
     "show_day_length": { "label": "Day / night length" },
     "show_moon_phase": { "label": "Moon phase" },
+    "show_summary": { "label": "Summary sentence (sky layout)" },
     "background": { "label": "Card background" },
     "update_interval": {
       "label": "Refresh interval",

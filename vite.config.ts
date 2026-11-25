@@ -6,7 +6,7 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 
 };
 
 // Above this size (minified), the build fails: keeps the card light for HACS users.
-const MAX_BUNDLE_BYTES = 60_000;
+const MAX_BUNDLE_BYTES = 70_000;
 
 // Bundled dependencies whose licenses (BSD) require the notice in binary redistributions.
 const BUNDLED_LICENSES = ['lit', 'suncalc'];

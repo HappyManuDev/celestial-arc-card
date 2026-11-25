@@ -4,6 +4,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { getMoonPhase, type MoonPhase } from './astro/moon';
 import { arcPoint } from './astro/progress';
+import { altitude, altitudeCurve, crossings, isUp, type SkyEvent } from './astro/sky';
 import { getSunPeriod, type SunPeriod } from './astro/sun';
 import {
   horizonLevel,
@@ -29,6 +30,7 @@ import { localize } from './localize/localize';
 import { ARC, renderArc, VIEWBOX_HEIGHT, VIEWBOX_WIDTH } from './render/arc';
 import { renderLabels } from './render/labels';
 import { renderMoon } from './render/moon-marker';
+import { renderSky, SKY_HEIGHT, type SkyTimeLabel } from './render/sky';
 import { renderSun } from './render/sun-marker';
 import {
   AXIS_HOURS,
@@ -43,6 +45,26 @@ import { type ActionKind, bindActions, hasAction } from './utils/actions';
 import { formatDuration, formatMoonPhase, formatPercent } from './utils/format';
 import { formatHour, formatTime, minutesOfDay } from './utils/time-format';
 
+const MINUTE_MS = 60 * 1000;
+const DAY_MS = 24 * 60 * MINUTE_MS;
+
+/**
+ * A translated sentence whose {placeholders} are replaced by templates
+ * (e.g. highlighted values) rather than plain text.
+ */
+function localizeParts(
+  hass: HomeAssistant,
+  key: string,
+  params: Record<string, unknown>,
+): unknown[] {
+  return localize(hass, key)
+    .split(/(\{\w+\})/)
+    .map((part) => {
+      const name = /^\{(\w+)\}$/.exec(part)?.[1];
+      return name && name in params ? params[name] : part;
+    });
+}
+
 const COLOR_VARIABLES: Record<keyof ColorsConfig, string> = {
   day_arc: '--cac-day-arc-color',
   night_arc: '--cac-night-arc-color',
@@ -56,7 +78,7 @@ export class CelestialArcCard extends LitElement {
 
   @state() private _config?: ResolvedConfig;
 
-  /** Drawing width of the wave layout, kept equal to its width in pixels. */
+  /** Drawing width of the wave and sky layouts, kept equal to their width in pixels. */
   @state() private _waveWidth = DEFAULT_WAVE_WIDTH;
 
   private _timer?: ReturnType<typeof setInterval>;
@@ -79,12 +101,14 @@ export class CelestialArcCard extends LitElement {
   }
 
   public getCardSize(): number {
-    const base = this._config?.layout === 'wave' ? 4 : 2;
-    return base + (this._config?.title ? 1 : 0);
+    const layout = this._config?.layout;
+    const base = layout === 'wave' || layout === 'sky' ? 4 : 2;
+    const summary = layout === 'sky' && this._config?.show_summary ? 1 : 0;
+    return base + summary + (this._config?.title ? 1 : 0);
   }
 
   public getGridOptions(): LovelaceGridOptions {
-    return this._config?.layout === 'wave'
+    return this._config?.layout === 'wave' || this._config?.layout === 'sky'
       ? { columns: 6, rows: 'auto', min_columns: 3 }
       : { columns: 12, rows: 'auto', min_columns: 4 };
   }
@@ -110,7 +134,7 @@ export class CelestialArcCard extends LitElement {
   }
 
   private _measureWave(): void {
-    const width = Math.round(this.shadowRoot?.querySelector('svg.wave')?.clientWidth ?? 0);
+    const width = Math.round(this.shadowRoot?.querySelector('svg.wave, svg.sky')?.clientWidth ?? 0);
     if (width > 0 && width !== this._waveWidth) {
       this._waveWidth = width;
     }
@@ -218,6 +242,14 @@ export class CelestialArcCard extends LitElement {
         config.background ? 'with-background wave' : 'wave',
         period,
         this._renderWave(period, isDay, now, moon, southern, infos),
+      );
+    }
+
+    if (config.layout === 'sky') {
+      return this._renderCard(
+        config.background ? 'with-background sky' : 'sky',
+        period,
+        this._renderSky(now, moon, southern, infos),
       );
     }
 
@@ -344,6 +376,118 @@ export class CelestialArcCard extends LitElement {
           ? html`<div class="infos">${infos.map((info) => html`<span>${info}</span>`)}</div>`
           : nothing
       }
+    `;
+  }
+
+  /**
+   * 24-hour layout with the real altitude of the sun and the moon: both
+   * curves over the day, the horizon, and their rise and set times.
+   */
+  private _renderSky(now: Date, moon: MoonPhase, southern: boolean, infos: string[]) {
+    const config = this._config!;
+    const hass = this.hass!;
+    const { latitude, longitude } = hass.config ?? {};
+    const title = config.title ? html`<div class="title">${config.title}</div>` : nothing;
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+      return html`${title}
+        <div class="warning">${localize(hass, 'warning.no_location')}</div>`;
+    }
+    const location = { latitude, longitude };
+    const showMoon = config.night_mode === 'moon';
+
+    // The day of the user's time zone, midnight to midnight.
+    const nowMinutes = minutesOfDay(now, hass);
+    const dayStart = new Date(now.getTime() - nowMinutes * MINUTE_MS);
+    const dayEnd = new Date(dayStart.getTime() + DAY_MS);
+    const toLabels = (events: SkyEvent[]): SkyTimeLabel[] =>
+      events.map((event) => ({
+        minutes: (event.time.getTime() - dayStart.getTime()) / MINUTE_MS,
+        rising: event.rising,
+        label: formatTime(event.time, hass),
+      }));
+
+    const width = this._waveWidth;
+    return html`
+      ${title}
+      ${config.show_summary ? this._renderSkySummary(now, dayEnd, location, showMoon) : nothing}
+      <svg
+        class="sky"
+        viewBox="0 0 ${width} ${SKY_HEIGHT}"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        ${renderSky({
+          width,
+          sun: altitudeCurve('sun', dayStart, location),
+          moon: showMoon ? altitudeCurve('moon', dayStart, location) : undefined,
+          nowMinutes,
+          nowLabel: formatTime(now, hass),
+          sunAltitude: altitude('sun', now, location),
+          sunUp: isUp('sun', now, location),
+          moonAltitude: altitude('moon', now, location),
+          moonUp: isUp('moon', now, location),
+          phase: moon,
+          southern,
+          sunTimes: config.show_times
+            ? toLabels(crossings('sun', dayStart, dayEnd, location))
+            : undefined,
+          moonTimes:
+            config.show_times && showMoon
+              ? toLabels(crossings('moon', dayStart, dayEnd, location))
+              : undefined,
+        })}
+      </svg>
+      ${
+        infos.length
+          ? html`<div class="infos">${infos.map((info) => html`<span>${info}</span>`)}</div>`
+          : nothing
+      }
+    `;
+  }
+
+  /** "The sun is up for another 6h 02m. The moon rises at 12:30.", with a legend. */
+  private _renderSkySummary(
+    now: Date,
+    dayEnd: Date,
+    location: { latitude: number; longitude: number },
+    showMoon: boolean,
+  ) {
+    const hass = this.hass!;
+    // Next events until the end of tomorrow.
+    const until = new Date(dayEnd.getTime() + DAY_MS);
+    const sunUp = isUp('sun', now, location);
+    const nextSun = crossings('sun', now, until, location)[0];
+    const sunSentence = nextSun
+      ? localizeParts(hass, sunUp ? 'sky.sun_up' : 'sky.sun_down', {
+          duration: html`<span class="sky-hl-sun"
+            >${formatDuration(nextSun.time.getTime() - now.getTime(), hass)}</span
+          >`,
+        })
+      : localize(hass, sunUp ? 'sky.sun_always_up' : 'sky.sun_always_down');
+
+    const nextMoon = showMoon ? crossings('moon', now, until, location)[0] : undefined;
+    const moonSentence = nextMoon
+      ? localizeParts(
+          hass,
+          `sky.moon_${nextMoon.rising ? 'rises' : 'sets'}${nextMoon.time >= dayEnd ? '_tomorrow' : ''}`,
+          { time: html`<span class="sky-hl-moon">${formatTime(nextMoon.time, hass)}</span>` },
+        )
+      : nothing;
+
+    return html`
+      <div class="sky-head">
+        <p class="sky-summary">${sunSentence} ${moonSentence}</p>
+        <div class="sky-legend">
+          <span><i class="sky-legend-sun"></i>${localize(hass, 'sky.legend_sun')}</span>
+          ${
+            showMoon
+              ? html`<span
+                  ><i class="sky-legend-moon"></i>${localize(hass, 'sky.legend_moon')}</span
+                >`
+              : nothing
+          }
+        </div>
+      </div>
     `;
   }
 

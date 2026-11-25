@@ -177,6 +177,151 @@ export const cardStyles = css`
     padding: 4px 8px 0;
   }
 
+  /* Sky layout: real altitude of the sun and the moon over 24 hours. */
+  .sky-head {
+    padding: 0 8px 4px;
+  }
+
+  .sky-summary {
+    margin: 0;
+    color: var(--cac-label-color, var(--primary-text-color, #212121));
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .sky-hl-sun {
+    color: color-mix(
+      in srgb,
+      var(--cac-day-arc-color, #c9a35a) 75%,
+      var(--primary-text-color, #212121)
+    );
+  }
+
+  .sky-hl-moon {
+    color: color-mix(
+      in srgb,
+      var(--cac-night-arc-color, #7c8ba1) 75%,
+      var(--primary-text-color, #212121)
+    );
+  }
+
+  .sky-legend {
+    display: flex;
+    gap: 14px;
+    margin-top: 6px;
+    color: var(--secondary-text-color, #727272);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .sky-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sky-legend i {
+    width: 14px;
+    height: 2px;
+    border-radius: 1px;
+  }
+
+  .sky-legend-sun {
+    background: var(--cac-day-arc-color, #c9a35a);
+  }
+
+  .sky-legend-moon {
+    background: var(--cac-night-arc-color, #7c8ba1);
+  }
+
+  .sky-grid {
+    stroke: var(--secondary-text-color, #727272);
+    stroke-width: 1;
+    stroke-dasharray: 1 3;
+    opacity: 0.35;
+  }
+
+  .sky-sun-stop {
+    stop-color: var(--cac-day-arc-color, #c9a35a);
+  }
+
+  .sky-moon-stop {
+    stop-color: var(--cac-night-arc-color, #7c8ba1);
+  }
+
+  .sky-curve {
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .sky-sun {
+    stroke: var(--cac-day-arc-color, #c9a35a);
+  }
+
+  .sky-moon {
+    stroke: var(--cac-night-arc-color, #7c8ba1);
+  }
+
+  .sky-below {
+    stroke-width: 1.5;
+    stroke-dasharray: 1 4;
+  }
+
+  .sky-horizon {
+    stroke: var(--primary-text-color, #212121);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    opacity: 0.45;
+  }
+
+  .sky-daylight {
+    stroke: var(--cac-day-arc-color, #c9a35a);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    opacity: 0.55;
+  }
+
+  .sky-now {
+    stroke: var(--primary-text-color, #212121);
+    stroke-width: 1;
+    opacity: 0.6;
+  }
+
+  .sky-now-label {
+    fill: var(--cac-label-color, var(--primary-text-color, #212121));
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  .sky-event {
+    stroke: var(--ha-card-background, var(--card-background-color, #fff));
+    stroke-width: 1.5;
+  }
+
+  .sky-event-sun,
+  .sky-arrow-sun {
+    fill: var(--cac-day-arc-color, #c9a35a);
+  }
+
+  .sky-event-moon,
+  .sky-arrow-moon {
+    fill: var(--cac-night-arc-color, #7c8ba1);
+  }
+
+  svg.sky .label {
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  ha-card.sky .infos {
+    justify-content: flex-start;
+    padding: 4px 8px 0;
+  }
+
   .warning {
     padding: 16px;
     color: var(--error-color, #db4437);

@@ -28,6 +28,7 @@ function buildSchema(hass?: HomeAssistant): SchemaItem[] {
           options: [
             { value: 'arc', label: localize(hass, 'editor.layout_options.arc') },
             { value: 'wave', label: localize(hass, 'editor.layout_options.wave') },
+            { value: 'sky', label: localize(hass, 'editor.layout_options.sky') },
           ],
         },
       },
@@ -51,6 +52,7 @@ function buildSchema(hass?: HomeAssistant): SchemaItem[] {
         { name: 'show_times', selector: { boolean: {} } },
         { name: 'show_day_length', selector: { boolean: {} } },
         { name: 'show_moon_phase', selector: { boolean: {} } },
+        { name: 'show_summary', selector: { boolean: {} } },
         { name: 'background', selector: { boolean: {} } },
       ],
     },

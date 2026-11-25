@@ -7,7 +7,7 @@ import type {
   ResolvedConfig,
 } from './types';
 
-export const LAYOUTS: readonly Layout[] = ['arc', 'wave'];
+export const LAYOUTS: readonly Layout[] = ['arc', 'wave', 'sky'];
 export const NIGHT_MODES: readonly NightMode[] = ['moon', 'none'];
 export const COLOR_KEYS: readonly (keyof ColorsConfig)[] = [
   'day_arc',
@@ -28,13 +28,20 @@ export const DEFAULT_CONFIG: Omit<ResolvedConfig, 'type'> = {
   show_times: true,
   show_day_length: false,
   show_moon_phase: false,
+  show_summary: false,
   background: false,
   update_interval: 60,
   tap_action: { action: 'more-info' },
   hold_action: { action: 'none' },
 };
 
-const BOOLEAN_KEYS = ['show_times', 'show_day_length', 'show_moon_phase', 'background'] as const;
+const BOOLEAN_KEYS = [
+  'show_times',
+  'show_day_length',
+  'show_moon_phase',
+  'show_summary',
+  'background',
+] as const;
 
 /** Validates a user configuration and applies defaults. Throws a readable error. */
 export function resolveConfig(config: CelestialArcCardConfig): ResolvedConfig {

@@ -3,6 +3,14 @@
 All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.2.0](https://github.com/HappyManuDev/celestial-arc-card/compare/v1.1.0...v1.2.0) (2026-11-25)
+
+
+### Features
+
+* add a sky layout with the real altitude of the sun and the moon ([f8be8e7](https://github.com/HappyManuDev/celestial-arc-card/commit/f8be8e7fe629af236a3181d8fb439f08b0b72b4f))
+* add a sky layout with the real altitude of the sun and the moon ([1b06fc2](https://github.com/HappyManuDev/celestial-arc-card/commit/1b06fc2f5fa31b0371af57296948a768fa5cf8fc))
+
 ## [1.1.0](https://github.com/HappyManuDev/celestial-arc-card/compare/v1.0.0...v1.1.0) (2026-11-23)
 
 

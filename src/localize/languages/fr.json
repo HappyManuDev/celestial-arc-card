@@ -33,8 +33,21 @@
       "astronomical": "Crépuscule astronomique"
     }
   },
+  "sky": {
+    "sun_up": "Le soleil est là pour encore {duration}.",
+    "sun_down": "Le soleil se lève dans {duration}.",
+    "sun_always_up": "Le soleil ne se couche pas.",
+    "sun_always_down": "Le soleil ne se lève pas.",
+    "moon_rises": "La lune se lève à {time}.",
+    "moon_sets": "La lune se couche à {time}.",
+    "moon_rises_tomorrow": "La lune se lève demain à {time}.",
+    "moon_sets_tomorrow": "La lune se couche demain à {time}.",
+    "legend_sun": "Soleil",
+    "legend_moon": "Lune"
+  },
   "warning": {
-    "entity_not_found": "Entité introuvable : {entity}"
+    "entity_not_found": "Entité introuvable : {entity}",
+    "no_location": "Renseignez la position de votre domicile dans Paramètres → Système → Général pour utiliser le style Ciel."
   },
   "editor": {
     "entity": {
@@ -44,11 +57,12 @@
     "title": { "label": "Titre (facultatif)" },
     "layout": {
       "label": "Style",
-      "helper": "Arc : avancement du jour ou de la nuit en cours. Vague : course du soleil sur 24 heures, avec les crépuscules."
+      "helper": "Arc : avancement du jour ou de la nuit en cours. Vague : course du soleil sur 24 heures, avec les crépuscules. Ciel : hauteur réelle du soleil et de la lune sur 24 heures."
     },
     "layout_options": {
       "arc": "Arc (demi-cercle)",
-      "wave": "Vague (courbe sur 24 h)"
+      "wave": "Vague (courbe sur 24 h)",
+      "sky": "Ciel (soleil et lune sur 24 h)"
     },
     "night_mode": {
       "label": "La nuit",
@@ -61,6 +75,7 @@
     "show_times": { "label": "Heures de lever / coucher" },
     "show_day_length": { "label": "Durée du jour / de la nuit" },
     "show_moon_phase": { "label": "Phase de la lune" },
+    "show_summary": { "label": "Phrase de résumé (style Ciel)" },
     "background": { "label": "Fond de carte" },
     "update_interval": {
       "label": "Intervalle de rafraîchissement",

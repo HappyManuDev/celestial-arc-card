@@ -106,6 +106,32 @@ const SCENARIOS = [
     },
     config: { layout: 'wave', background: true, show_moon_phase: true },
   },
+  {
+    name: 'preview-sky-day',
+    theme: 'light',
+    width: 380,
+    now: '2024-10-15T08:40:00Z',
+    language: 'en',
+    sun: {
+      state: 'above_horizon',
+      next_setting: '2024-10-15T16:59:00Z',
+      next_rising: '2024-10-16T06:08:00Z',
+    },
+    config: { layout: 'sky', background: true, show_summary: true },
+  },
+  {
+    name: 'preview-sky-night',
+    theme: 'dark',
+    width: 380,
+    now: '2024-10-15T19:30:00Z',
+    language: 'en',
+    sun: {
+      state: 'below_horizon',
+      next_rising: '2024-10-16T06:08:00Z',
+      next_setting: '2024-10-16T16:57:00Z',
+    },
+    config: { layout: 'sky', background: true },
+  },
 ];
 
 function pageHtml(theme, width = 380) {
